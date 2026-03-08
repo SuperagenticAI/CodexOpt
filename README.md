@@ -1,6 +1,6 @@
 # CodexOpt
 
-CodexOpt: Optize your Agents.MD and Skills for Codex with GEPA
+CodexOpt: Optimize your Agents.MD and Skills for Codex with GEPA
 
 CodexOpt is a lightweight Python CLI to improve Codex instruction assets with a repeatable loop:
 
