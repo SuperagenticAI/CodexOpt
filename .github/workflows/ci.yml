@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint-build-test:
+    runs-on: ubuntu-latest
+    env:
+      UV_PYTHON: "3.11"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Verify lockfile
+        run: uv lock --check
+      - name: Install
+        run: uv sync --extra dev
+      - name: Lint
+        run: uv run --no-sync ruff check src tests
+      - name: Test
+        run: uv run --no-sync pytest -q
+        env:
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+      - name: Build
+        run: uv build

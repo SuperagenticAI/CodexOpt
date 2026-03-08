@@ -1,0 +1,22 @@
+version: 1
+targets:
+  agents_files:
+    - AGENTS.md
+    - "**/AGENTS.md"
+    - "**/AGENTS.override.md"
+  skills_globs:
+    - ".codex/skills/**/SKILL.md"
+    - "**/.codex/skills/**/SKILL.md"
+  exclude_globs:
+    - ".git/**"
+    - ".codexopt/**"
+    - ".venv/**"
+    - "node_modules/**"
+    - "reference/**"
+output:
+  root_dir: ".codexopt"
+optimization:
+  engine: "heuristic"
+  min_apply_delta: 0.01
+  max_metric_calls: 60
+  reflection_model: null
