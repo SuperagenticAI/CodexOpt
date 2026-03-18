@@ -2,6 +2,13 @@
 
 CodexOpt: Optimize your Agents.MD and Skills for Codex with GEPA
 
+## Demo Repo
+
+Want to see CodexOpt on a small, intentionally messy repository with sample
+`AGENTS.md`, demo skills, `tasks.md`, and `issues.md`?
+
+- Demo: https://github.com/SuperagenticAI/codexopt-demo
+
 CodexOpt is a lightweight Python CLI to improve Codex instruction assets with a repeatable loop:
 
 1. Scan instruction files.
@@ -294,10 +301,43 @@ The best candidate is selected by score delta. If delta is below `min_apply_delt
 
 CodexOpt can call `gepa.optimize_anything` when `--engine gepa` is selected.
 
+The GEPA path is model-agnostic. In practice, teams can use any reflection model
+supported by their GEPA / LiteLLM setup, including OpenAI, Gemini, local models,
+or other compatible providers. That means you can ask GEPA to generate feedback
+and candidate improvements using whichever model gives you the best quality /
+cost tradeoff for your workflow.
+
 Requirements:
 
 - `gepa` installed in the environment.
 - A valid reflection model via `--reflection-model` or config.
+
+Common examples:
+
+```yaml
+optimization:
+  engine: "gepa"
+  reflection_model: "openai/gpt-5-mini"
+```
+
+```yaml
+optimization:
+  engine: "gepa"
+  reflection_model: "gemini/gemini-2.5-pro"
+```
+
+For OpenAI-backed GEPA runs, set:
+
+```bash
+export OPENAI_API_KEY="your-openai-key"
+```
+
+For Gemini-backed GEPA runs, set:
+
+```bash
+export GEMINI_API_KEY="your-gemini-key"
+export GOOGLE_API_KEY="$GEMINI_API_KEY"
+```
 
 Fallback behavior:
 
