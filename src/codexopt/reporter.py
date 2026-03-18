@@ -50,20 +50,33 @@ def build_markdown_report(root_dir: Path) -> str:
         )
     if benchmark:
         run_id, data = benchmark
+        evidence = data.get("evidence", {})
         lines.extend(
             [
                 "## benchmark",
                 f"- run: `{run_id}`",
                 f"- overall score: {data['overall_score']}",
+                f"- task files: {len(evidence.get('task_paths', []))}",
+                f"- issue files: {len(evidence.get('issue_paths', []))}",
                 "",
             ]
         )
+        top_feedback: list[str] = []
+        for file_result in data.get("files", []):
+            top_feedback.extend(file_result.get("details", {}).get("feedback", [])[:1])
+        if top_feedback:
+            lines.append("### feedback highlights")
+            for item in top_feedback[:5]:
+                lines.append(f"- {item}")
+            lines.append("")
     if opt_agents:
         run_id, data = opt_agents
         lines.extend(
             [
                 "## optimize agents",
                 f"- run: `{run_id}`",
+                f"- requested engine: {data.get('requested_engine', data.get('engine', 'unknown'))}",
+                f"- GEPA fallback count: {data.get('fallback_count', 0)}",
                 f"- files improved: {data['files_improved']}/{data['files_total']}",
                 f"- average delta: {data['average_delta']}",
                 "",
@@ -75,6 +88,8 @@ def build_markdown_report(root_dir: Path) -> str:
             [
                 "## optimize skills",
                 f"- run: `{run_id}`",
+                f"- requested engine: {data.get('requested_engine', data.get('engine', 'unknown'))}",
+                f"- GEPA fallback count: {data.get('fallback_count', 0)}",
                 f"- files improved: {data['files_improved']}/{data['files_total']}",
                 f"- average delta: {data['average_delta']}",
                 "",

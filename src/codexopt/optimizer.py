@@ -11,6 +11,7 @@ except Exception:  # pragma: no cover
     yaml = None
 
 from .benchmark import score_entry
+from .quality import analyze_instruction_text
 from .types import FileOptimizationResult
 from .types import OptimizeCandidate
 
@@ -98,7 +99,7 @@ def _build_entry_for_scoring(path: Path, kind: str, text: str) -> dict[str, Any]
     words = len(text.split())
     token_estimate = int(words * 1.33)
     issues: list[str] = []
-    metadata: dict[str, Any] = {}
+    metadata: dict[str, Any] = analyze_instruction_text(text)
     if kind == "skill":
         fm, _ = _extract_frontmatter(text)
         metadata["frontmatter_present"] = fm is not None
@@ -121,9 +122,14 @@ def _build_entry_for_scoring(path: Path, kind: str, text: str) -> dict[str, Any]
             issues.append("empty_agents")
         if token_estimate > 6000:
             issues.append("agents_too_large")
+        if metadata.get("contradictions"):
+            issues.append("contradictory_guidance")
+        if metadata.get("duplicate_nonempty_line_count", 0) > 0:
+            issues.append("duplicate_lines")
     return {
         "path": str(path),
         "kind": kind,
+        "text": text,
         "bytes": len(text.encode("utf-8")),
         "lines": len(text.splitlines()),
         "words": words,
@@ -133,12 +139,17 @@ def _build_entry_for_scoring(path: Path, kind: str, text: str) -> dict[str, Any]
     }
 
 
-def _score_text(path: Path, kind: str, text: str) -> float:
+def _score_text(path: Path, kind: str, text: str, evidence: dict[str, Any] | None = None) -> float:
     entry = _build_entry_for_scoring(path, kind, text)
-    return score_entry(entry).score
+    return score_entry(entry, evidence=evidence).score
 
 
-def _generate_heuristic_candidates(path: Path, kind: str, original: str) -> list[OptimizeCandidate]:
+def _generate_heuristic_candidates(
+    path: Path,
+    kind: str,
+    original: str,
+    evidence: dict[str, Any] | None = None,
+) -> list[OptimizeCandidate]:
     variants: list[tuple[str, str]] = [
         ("original", original),
         ("normalize_whitespace", _normalize_whitespace(original)),
@@ -162,7 +173,7 @@ def _generate_heuristic_candidates(path: Path, kind: str, original: str) -> list
         candidates.append(
             OptimizeCandidate(
                 name=name,
-                score=_score_text(path, kind, content),
+                score=_score_text(path, kind, content, evidence=evidence),
                 content=content,
             )
         )
@@ -175,6 +186,7 @@ def _optimize_with_gepa(
     original: str,
     reflection_model: str | None,
     max_metric_calls: int,
+    evidence: dict[str, Any] | None = None,
 ) -> OptimizeCandidate:
     try:
         from gepa.optimize_anything import EngineConfig
@@ -188,10 +200,13 @@ def _optimize_with_gepa(
         raise RuntimeError("GEPA engine requires --reflection-model or config.optimization.reflection_model")
 
     def evaluator(candidate_text: str) -> tuple[float, dict[str, Any]]:
-        score = _score_text(path, kind, candidate_text)
+        score = _score_text(path, kind, candidate_text, evidence=evidence)
+        details = score_entry(_build_entry_for_scoring(path, kind, candidate_text), evidence=evidence).details
         side_info = {
             "scores": {"quality": score},
             "Input": {"path": str(path), "kind": kind},
+            "Feedback": details.get("feedback", []),
+            "Criteria": details.get("criteria_scores", {}),
         }
         return score, side_info
 
@@ -214,7 +229,7 @@ def _optimize_with_gepa(
         best_text = str(best)
     return OptimizeCandidate(
         name="gepa_best",
-        score=_score_text(path, kind, best_text),
+        score=_score_text(path, kind, best_text, evidence=evidence),
         content=best_text,
     )
 
@@ -226,8 +241,10 @@ def optimize_entries(
     min_delta: float,
     reflection_model: str | None,
     max_metric_calls: int,
+    evidence: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     file_results: list[FileOptimizationResult] = []
+    fallback_count = 0
     for entry in entries:
         if entry["kind"] != kind:
             continue
@@ -235,19 +252,31 @@ def optimize_entries(
         if not path.exists():
             continue
         original = path.read_text(encoding="utf-8", errors="replace")
-        baseline = _score_text(path, kind, original)
+        baseline = _score_text(path, kind, original, evidence=evidence)
 
+        actual_engine = engine
+        fallback_reason: str | None = None
         if engine == "gepa":
             try:
                 candidates = [OptimizeCandidate("original", baseline, original)]
                 candidates.append(
-                    _optimize_with_gepa(path, kind, original, reflection_model, max_metric_calls)
+                    _optimize_with_gepa(
+                        path,
+                        kind,
+                        original,
+                        reflection_model,
+                        max_metric_calls,
+                        evidence=evidence,
+                    )
                 )
                 candidates = sorted(candidates, key=lambda item: item.score, reverse=True)
-            except Exception:
-                candidates = _generate_heuristic_candidates(path, kind, original)
+            except Exception as exc:
+                candidates = _generate_heuristic_candidates(path, kind, original, evidence=evidence)
+                actual_engine = "heuristic_fallback"
+                fallback_reason = str(exc)
+                fallback_count += 1
         else:
-            candidates = _generate_heuristic_candidates(path, kind, original)
+            candidates = _generate_heuristic_candidates(path, kind, original, evidence=evidence)
 
         best = candidates[0]
         delta = best.score - baseline
@@ -270,9 +299,11 @@ def optimize_entries(
                 baseline_score=round(baseline, 4),
                 best_score=round(best.score, 4),
                 delta=round(delta, 4),
+                actual_engine=actual_engine,
                 best_candidate_name=best.name,
                 best_content=best.content,
                 diff=diff,
+                fallback_reason=fallback_reason,
                 candidates=[
                     {"name": cand.name, "score": round(cand.score, 4)}
                     for cand in candidates
@@ -284,6 +315,8 @@ def optimize_entries(
     return {
         "kind": kind,
         "engine": engine,
+        "requested_engine": engine,
+        "fallback_count": fallback_count,
         "files_total": len(file_results),
         "files_improved": len(improved),
         "average_delta": round(
@@ -297,9 +330,11 @@ def optimize_entries(
                 "baseline_score": item.baseline_score,
                 "best_score": item.best_score,
                 "delta": item.delta,
+                "actual_engine": item.actual_engine,
                 "best_candidate_name": item.best_candidate_name,
                 "best_content": item.best_content,
                 "diff": item.diff,
+                "fallback_reason": item.fallback_reason,
                 "candidates": item.candidates,
             }
             for item in file_results
@@ -310,8 +345,13 @@ def optimize_entries(
 def print_optimization_summary(result: dict[str, Any]) -> None:
     print(f"kind: {result['kind']}")
     print(f"engine: {result['engine']}")
+    if result.get("fallback_count", 0):
+        print(f"fallback_count: {result['fallback_count']}")
     print(f"files_total: {result['files_total']}")
     print(f"files_improved: {result['files_improved']}")
     print(f"average_delta: {result['average_delta']:.4f}")
     for item in result["results"]:
-        print(f"- {item['path']} delta={item['delta']:.4f} best={item['best_candidate_name']}")
+        suffix = ""
+        if item.get("actual_engine") == "heuristic_fallback":
+            suffix = " actual_engine=heuristic_fallback"
+        print(f"- {item['path']} delta={item['delta']:.4f} best={item['best_candidate_name']}{suffix}")

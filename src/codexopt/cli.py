@@ -12,6 +12,7 @@ from .artifacts import read_json
 from .artifacts import resolve_run_id
 from .artifacts import set_latest_run
 from .artifacts import write_json
+from .benchmark import load_evidence
 from .benchmark import print_benchmark_summary
 from .benchmark import run_benchmark
 from .config import DEFAULT_CONFIG_FILENAME
@@ -55,7 +56,8 @@ def cmd_benchmark(args: argparse.Namespace) -> int:
     cfg, _cfg_path = _resolve_config(args.config)
     cwd = Path.cwd()
     scan_result = scan_project(cwd, cfg)
-    benchmark_result = run_benchmark(scan_result)
+    evidence = load_evidence(cwd, cfg)
+    benchmark_result = run_benchmark(scan_result, evidence=evidence)
 
     output_root = Path(cfg.output.root_dir)
     run_id, run_dir = new_run_dir(output_root, "benchmark")
@@ -82,6 +84,7 @@ def _optimize(args: argparse.Namespace, kind: str) -> int:
         agents_files=agents_patterns,
         skills_globs=skills_patterns,
     )
+    evidence = load_evidence(cwd, cfg)
     result = optimize_entries(
         entries=scan_result["entries"],
         kind=kind,
@@ -89,6 +92,7 @@ def _optimize(args: argparse.Namespace, kind: str) -> int:
         min_delta=cfg.optimization.min_apply_delta,
         reflection_model=args.reflection_model or cfg.optimization.reflection_model,
         max_metric_calls=args.max_metric_calls or cfg.optimization.max_metric_calls,
+        evidence=evidence,
     )
 
     output_root = Path(cfg.output.root_dir)

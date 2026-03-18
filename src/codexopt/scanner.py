@@ -10,6 +10,7 @@ except Exception:  # pragma: no cover
     yaml = None
 
 from .config import CodexOptConfig
+from .quality import analyze_instruction_text
 from .types import ScanEntry
 
 
@@ -74,6 +75,7 @@ def _build_entry(path: Path, kind: str) -> ScanEntry:
     token_est = int(words * 1.33)
     issues: list[str] = []
     metadata: dict[str, Any] = {}
+    metadata.update(analyze_instruction_text(text))
 
     if kind == "skill":
         frontmatter = _extract_frontmatter(text)
@@ -88,6 +90,10 @@ def _build_entry(path: Path, kind: str) -> ScanEntry:
             issues.append("empty_agents")
         if token_est > 6000:
             issues.append("agents_too_large")
+        if metadata.get("contradictions"):
+            issues.append("contradictory_guidance")
+        if metadata.get("duplicate_nonempty_line_count", 0) > 0:
+            issues.append("duplicate_lines")
 
     return ScanEntry(
         path=str(path),

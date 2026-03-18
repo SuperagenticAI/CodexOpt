@@ -39,6 +39,12 @@ class OutputConfig:
 
 
 @dataclass
+class EvidenceConfig:
+    task_files: list[str] = field(default_factory=list)
+    issue_files: list[str] = field(default_factory=list)
+
+
+@dataclass
 class OptimizationConfig:
     engine: str = "heuristic"
     min_apply_delta: float = 0.01
@@ -51,6 +57,7 @@ class CodexOptConfig:
     version: int = 1
     targets: TargetsConfig = field(default_factory=TargetsConfig)
     output: OutputConfig = field(default_factory=OutputConfig)
+    evidence: EvidenceConfig = field(default_factory=EvidenceConfig)
     optimization: OptimizationConfig = field(default_factory=OptimizationConfig)
 
 
@@ -77,6 +84,10 @@ def _config_to_dict(cfg: CodexOptConfig) -> dict[str, Any]:
             "exclude_globs": cfg.targets.exclude_globs,
         },
         "output": {"root_dir": cfg.output.root_dir},
+        "evidence": {
+            "task_files": cfg.evidence.task_files,
+            "issue_files": cfg.evidence.issue_files,
+        },
         "optimization": {
             "engine": cfg.optimization.engine,
             "min_apply_delta": cfg.optimization.min_apply_delta,
@@ -89,6 +100,7 @@ def _config_to_dict(cfg: CodexOptConfig) -> dict[str, Any]:
 def _dict_to_config(data: dict[str, Any]) -> CodexOptConfig:
     targets = data.get("targets", {})
     output = data.get("output", {})
+    evidence = data.get("evidence", {})
     optimization = data.get("optimization", {})
     return CodexOptConfig(
         version=int(data.get("version", 1)),
@@ -98,6 +110,10 @@ def _dict_to_config(data: dict[str, Any]) -> CodexOptConfig:
             exclude_globs=list(targets.get("exclude_globs", TargetsConfig().exclude_globs)),
         ),
         output=OutputConfig(root_dir=str(output.get("root_dir", ".codexopt"))),
+        evidence=EvidenceConfig(
+            task_files=list(evidence.get("task_files", [])),
+            issue_files=list(evidence.get("issue_files", [])),
+        ),
         optimization=OptimizationConfig(
             engine=str(optimization.get("engine", "heuristic")),
             min_apply_delta=float(optimization.get("min_apply_delta", 0.01)),

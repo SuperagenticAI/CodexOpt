@@ -45,7 +45,9 @@ class FileOptimizationResult:
     baseline_score: float
     best_score: float
     delta: float
+    actual_engine: str
     best_candidate_name: str
     best_content: str
     diff: str
+    fallback_reason: str | None = None
     candidates: list[dict[str, Any]] = field(default_factory=list)

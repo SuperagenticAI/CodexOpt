@@ -28,9 +28,11 @@ CodexOpt turns these edits into measurable runs with artifacts you can inspect a
 ## Features
 
 - Project scan with issue detection for agents and skills.
-- Heuristic benchmark scoring.
+- Benchmark scoring with sub-scores and natural-language feedback.
+- Optional evidence inputs from repo task files and issue exports.
 - Optimization engine `heuristic` (default, local and deterministic).
 - Optional optimization engine `gepa` (via `gepa.optimize_anything`).
+- Explicit reporting when a GEPA-requested run falls back to heuristic optimization.
 - Safe apply flow with automatic backups.
 - Markdown reporting from latest runs.
 - Minimal OSS CI (lint, test, build).
@@ -89,6 +91,44 @@ uv run codexopt apply --kind agents
 # 8) Generate markdown summary
 uv run codexopt report --output codexopt-report.md
 ```
+
+## How Teams Use CodexOpt
+
+Developers use CodexOpt in the repository that contains their Codex instruction assets:
+
+- `AGENTS.md`
+- `.codex/skills/**/SKILL.md`
+
+Optional evidence can also be added to improve benchmarking and optimization quality:
+
+- task files (`tasks.md`, task lists, or JSON fixtures)
+- issue/review exports (`issues.md` or JSON exports)
+
+Typical workflow:
+
+1. Run `scan` and `benchmark` to measure the current instruction assets.
+2. Run `optimize agents` and `optimize skills` to generate improved candidates.
+3. Review the generated diffs and report artifacts under `.codexopt/runs/`.
+4. Run `apply --dry-run` first, then apply accepted changes.
+5. Commit the updated instruction files and, if useful, attach the report to a PR.
+
+Example with optional evidence configured in `codexopt.yaml`:
+
+```yaml
+evidence:
+  task_files:
+    - tasks.md
+  issue_files:
+    - issues.md
+```
+
+With that config in place, `benchmark` and `optimize` use:
+
+- static prompt-quality checks
+- repo task alignment
+- recurring issue/review themes
+
+Today, task and issue files influence scoring and feedback. CodexOpt does not yet execute full agent task simulations.
 
 Use `codexopt.example.yaml` as a starting point for committed team config.
 
@@ -186,6 +226,9 @@ targets:
     - "reference/**"
 output:
   root_dir: ".codexopt"
+evidence:
+  task_files: []
+  issue_files: []
 optimization:
   engine: "heuristic"
   min_apply_delta: 0.01
@@ -199,6 +242,8 @@ Config notes:
 - `targets.skills_globs`: glob patterns for `SKILL.md` targets.
 - `targets.exclude_globs`: paths ignored during scan.
 - `output.root_dir`: run artifacts and backups location.
+- `evidence.task_files`: optional markdown/json task lists used for repo-alignment scoring.
+- `evidence.issue_files`: optional markdown/json issue or review exports used for theme-aware feedback.
 - `optimization.engine`: default optimization engine.
 - `optimization.min_apply_delta`: minimum score gain required to apply.
 - `optimization.max_metric_calls`: GEPA metric budget.
@@ -213,6 +258,9 @@ AGENTS scoring factors include:
 - Too short or too long content penalties.
 - Token-heaviness estimate penalty.
 - Empty file penalty.
+- Contradictory guidance penalties.
+- Missing workflow / verification / output-format guidance penalties.
+- Repo-context and task-alignment signals when evidence files are configured.
 
 SKILL scoring factors include:
 
@@ -220,6 +268,14 @@ SKILL scoring factors include:
 - Missing `name` / `description` penalties.
 - Overly long frontmatter fields penalties.
 - Too short or too long content penalties.
+- Weak trigger/workflow/verification guidance penalties.
+- Repo task alignment signals when evidence files are configured.
+
+Each benchmarked file also includes:
+
+- criterion-level sub-scores
+- natural-language feedback
+- optional evidence summary from configured task/issue files
 
 ## Optimization Behavior
 
@@ -246,6 +302,7 @@ Requirements:
 Fallback behavior:
 
 - If GEPA is unavailable or errors, CodexOpt falls back to heuristic optimization.
+- Fallbacks are recorded in optimization artifacts, CLI summaries, and reports.
 
 ## Artifacts and State
 
