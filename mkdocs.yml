@@ -1,0 +1,43 @@
+site_name: CodexOpt
+site_description: Benchmark and optimize AGENTS.md and SKILL.md for Codex
+site_url: https://superagenticai.github.io/CodexOpt/
+repo_url: https://github.com/SuperagenticAI/CodexOpt
+repo_name: SuperagenticAI/CodexOpt
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  logo: assets/codexopt_logo.png
+  favicon: assets/codexopt_favicon.png
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.suggest
+    - search.highlight
+  palette:
+    - scheme: default
+      primary: black
+      accent: blue
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Configuration: configuration.md
+  - Benchmarking: benchmarking.md
+  - Optimization: optimization.md
+  - Demo Repo: demo.md
+  - FAQ: faq.md
+

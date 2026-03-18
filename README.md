@@ -1,5 +1,7 @@
 # CodexOpt
 
+[![Docs](https://img.shields.io/badge/docs-mkdocs-blue)](https://superagenticai.github.io/CodexOpt/)
+
 CodexOpt: Optimize your Agents.MD and Skills for Codex with GEPA
 
 ## Demo Repo
@@ -8,6 +10,15 @@ Want to see CodexOpt on a small, intentionally messy repository with sample
 `AGENTS.md`, demo skills, `tasks.md`, and `issues.md`?
 
 - Demo: https://github.com/SuperagenticAI/codexopt-demo
+
+## Documentation
+
+- Docs site: https://superagenticai.github.io/CodexOpt/
+- Docs source: [`docs/`](/Users/shashi/oss/CodexOpt/docs)
+
+View the published documentation:
+
+- https://superagenticai.github.io/CodexOpt/
 
 CodexOpt is a lightweight Python CLI to improve Codex instruction assets with a repeatable loop:
 
