@@ -2,6 +2,10 @@
   <img src="assets/codexopt_logo.png" alt="CodexOpt logo" width="280">
 </p>
 
+<p align="center">
+  Benchmark and optimize <code>AGENTS.md</code> and <code>SKILL.md</code> for Codex.
+</p>
+
 # CodexOpt
 
 [![PyPI version](https://img.shields.io/pypi/v/codexopt)](https://pypi.org/project/codexopt/)
@@ -9,6 +13,12 @@
 [![Docs](https://img.shields.io/badge/docs-mkdocs-blue)](https://superagenticai.github.io/CodexOpt/)
 [![Demo Repo](https://img.shields.io/badge/demo-codexopt--demo-0f766e)](https://github.com/SuperagenticAI/codexopt-demo)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+<p align="center">
+  <a href="https://superagenticai.github.io/CodexOpt/"><img src="https://img.shields.io/badge/View-Documentation-2563eb?style=for-the-badge" alt="View Documentation"></a>
+  <a href="https://github.com/SuperagenticAI/codexopt-demo"><img src="https://img.shields.io/badge/Try-Demo-0f766e?style=for-the-badge" alt="Try Demo"></a>
+  <a href="https://pypi.org/project/codexopt/"><img src="https://img.shields.io/badge/Install-PyPI-111827?style=for-the-badge" alt="Install from PyPI"></a>
+</p>
 
 CodexOpt is a lightweight CLI for benchmarking and optimizing Codex instruction assets.
 
@@ -19,9 +29,9 @@ It focuses on two repo-local files:
 
 ## Quick Links
 
-- Documentation: https://superagenticai.github.io/CodexOpt/
-- Demo repository: https://github.com/SuperagenticAI/codexopt-demo
-- PyPI package: https://pypi.org/project/codexopt/
+- Documentation: [superagenticai.github.io/CodexOpt](https://superagenticai.github.io/CodexOpt/)
+- Demo repository: [github.com/SuperagenticAI/codexopt-demo](https://github.com/SuperagenticAI/codexopt-demo)
+- PyPI package: [pypi.org/project/codexopt](https://pypi.org/project/codexopt/)
 - Docs source: [docs/](/Users/shashi/oss/CodexOpt/docs)
 
 CodexOpt gives teams a repeatable workflow to:
