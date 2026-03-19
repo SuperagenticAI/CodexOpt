@@ -1,0 +1,60 @@
+:root {
+  --md-primary-fg-color: #0f172a;
+  --md-primary-fg-color--light: #1e293b;
+  --md-primary-fg-color--dark: #020617;
+  --md-accent-fg-color: #0f766e;
+  --codexopt-hero-start: #eff6ff;
+  --codexopt-hero-end: #ecfeff;
+  --codexopt-card-border: rgba(15, 23, 42, 0.08);
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #020617;
+  --md-primary-fg-color--light: #0f172a;
+  --md-primary-fg-color--dark: #000000;
+  --md-accent-fg-color: #5eead4;
+  --codexopt-hero-start: rgba(15, 23, 42, 0.92);
+  --codexopt-hero-end: rgba(8, 47, 73, 0.85);
+  --codexopt-card-border: rgba(148, 163, 184, 0.18);
+}
+
+.codexopt-hero {
+  padding: 2rem 1.25rem;
+  margin: 0 0 1.5rem 0;
+  border: 1px solid var(--codexopt-card-border);
+  border-radius: 1.25rem;
+  background: linear-gradient(135deg, var(--codexopt-hero-start), var(--codexopt-hero-end));
+}
+
+.codexopt-hero h1 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.codexopt-lead {
+  font-size: 1.12rem;
+  max-width: 48rem;
+}
+
+.codexopt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.9rem;
+  margin: 1.25rem 0 1.75rem 0;
+}
+
+.codexopt-card {
+  padding: 1rem;
+  border: 1px solid var(--codexopt-card-border);
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--md-default-bg-color) 92%, transparent);
+}
+
+.codexopt-card strong {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.md-typeset .md-button {
+  border-radius: 999px;
+}

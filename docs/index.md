@@ -1,4 +1,28 @@
-# CodexOpt
+<section class="codexopt-hero">
+  <h1>CodexOpt</h1>
+  <p class="codexopt-lead">
+    Benchmark and optimize <code>AGENTS.md</code> and <code>SKILL.md</code> for Codex with a repeatable developer workflow.
+  </p>
+  <p>
+    <a class="md-button md-button--primary" href="getting-started/">Get Started</a>
+    <a class="md-button" href="https://github.com/SuperagenticAI/codexopt-demo">View Demo Repo</a>
+  </p>
+</section>
+
+<div class="codexopt-grid">
+  <div class="codexopt-card">
+    <strong>Targeted</strong>
+    Focused on repo-local Codex assets: <code>AGENTS.md</code> and <code>SKILL.md</code>.
+  </div>
+  <div class="codexopt-card">
+    <strong>Measurable</strong>
+    Score instruction quality, attach evidence, and review artifact-backed changes.
+  </div>
+  <div class="codexopt-card">
+    <strong>Practical</strong>
+    Scan, benchmark, optimize, review, apply, and report from a single CLI.
+  </div>
+</div>
 
 CodexOpt helps teams benchmark and optimize Codex instruction assets with a repeatable workflow.
 
@@ -35,6 +59,18 @@ CodexOpt makes those problems measurable and easier to improve safely.
 - records artifacts under `.codexopt/`
 - generates markdown reports for review and PR discussion
 
+## Why Developers Use It
+
+Instruction files tend to drift long before teams notice:
+
+- duplicated rules
+- contradictory constraints
+- weak testing guidance
+- vague skill triggers
+- prompt bloat
+
+CodexOpt gives developers a way to improve those files with something closer to a normal engineering loop than ad hoc prompt editing.
+
 ## Demo Repository
 
 If you want a small example repo with intentionally messy instructions, use the companion demo:
@@ -51,4 +87,3 @@ uv run codexopt optimize agents --file AGENTS.md
 uv run codexopt optimize skills --glob ".codex/skills/**/SKILL.md"
 uv run codexopt report --output codexopt-report.md
 ```
-
