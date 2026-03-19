@@ -76,6 +76,7 @@ CodexOpt gives developers a way to improve those files with something closer to 
 If you want a small example repo with intentionally messy instructions, use the companion demo:
 
 - Demo repo: <https://github.com/SuperagenticAI/codexopt-demo>
+- Demo guide: [Open the demo walkthrough](demo.md)
 
 ## Try It
 
@@ -87,3 +88,6 @@ uv run codexopt optimize agents --file AGENTS.md
 uv run codexopt optimize skills --glob ".codex/skills/**/SKILL.md"
 uv run codexopt report --output codexopt-report.md
 ```
+
+If you want a guided example with sample inputs, evidence files, and ready-made commands,
+start with the [demo walkthrough](demo.md).

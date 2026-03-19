@@ -1,6 +1,14 @@
+<p align="center">
+  <img src="assets/codexopt_logo.png" alt="CodexOpt logo" width="280">
+</p>
+
 # CodexOpt
 
+[![PyPI version](https://img.shields.io/pypi/v/codexopt)](https://pypi.org/project/codexopt/)
+[![Python](https://img.shields.io/pypi/pyversions/codexopt)](https://pypi.org/project/codexopt/)
 [![Docs](https://img.shields.io/badge/docs-mkdocs-blue)](https://superagenticai.github.io/CodexOpt/)
+[![Demo Repo](https://img.shields.io/badge/demo-codexopt--demo-0f766e)](https://github.com/SuperagenticAI/codexopt-demo)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 CodexOpt: Optimize your Agents.MD and Skills for Codex with GEPA
 
