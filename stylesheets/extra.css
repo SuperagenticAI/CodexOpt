@@ -1,0 +1,215 @@
+:root {
+  --md-primary-fg-color: #0f172a;
+  --md-primary-fg-color--light: #1e293b;
+  --md-primary-fg-color--dark: #020617;
+  --md-accent-fg-color: #0f766e;
+  --md-default-bg-color: #ffffff;
+  --md-default-bg-color--light: #f8fafc;
+  --md-default-bg-color--lighter: #eef2f7;
+  --md-default-fg-color: #0f172a;
+  --md-default-fg-color--light: #334155;
+  --md-default-fg-color--lighter: #64748b;
+  --codexopt-hero-start: #eff6ff;
+  --codexopt-hero-end: #ecfeff;
+  --codexopt-hero-fg: #0f172a;
+  --codexopt-hero-muted: #334155;
+  --codexopt-card-border: rgba(15, 23, 42, 0.1);
+  --codexopt-card-bg: #ffffff;
+  --codexopt-card-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  --codexopt-link: #0f766e;
+  --codexopt-code-bg: #f8fafc;
+  --codexopt-code-fg: #0f172a;
+  --codexopt-pre-bg: #f8fafc;
+  --codexopt-pre-fg: #0f172a;
+  --codexopt-pre-border: rgba(15, 23, 42, 0.12);
+  --codexopt-code-muted: #475569;
+  --codexopt-code-keyword: #7c3aed;
+  --codexopt-code-string: #15803d;
+  --codexopt-code-function: #1d4ed8;
+  --codexopt-code-number: #b45309;
+  --codexopt-hero-primary-btn-bg: #0f172a;
+  --codexopt-hero-primary-btn-fg: #ffffff;
+  --codexopt-hero-secondary-btn-bg: rgba(255, 255, 255, 0.78);
+  --codexopt-hero-secondary-btn-fg: #0f172a;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color: #020617;
+  --md-default-bg-color--light: #081120;
+  --md-default-bg-color--lighter: #111b2d;
+  --md-default-bg-color--lightest: #172238;
+  --md-default-fg-color: #f1f5f9;
+  --md-default-fg-color--light: #d6e0ec;
+  --md-default-fg-color--lighter: #94a3b8;
+  --md-primary-fg-color: #020617;
+  --md-primary-fg-color--light: #0f172a;
+  --md-primary-fg-color--dark: #000000;
+  --md-accent-fg-color: #2dd4bf;
+  --codexopt-hero-start: #08111f;
+  --codexopt-hero-end: #10324b;
+  --codexopt-hero-fg: #f8fafc;
+  --codexopt-hero-muted: #dbe7f3;
+  --codexopt-card-border: rgba(148, 163, 184, 0.16);
+  --codexopt-card-bg: #0b1526;
+  --codexopt-card-shadow: 0 12px 36px rgba(0, 0, 0, 0.28);
+  --codexopt-link: #5eead4;
+  --codexopt-code-bg: rgba(30, 41, 59, 0.88);
+  --codexopt-code-fg: #93c5fd;
+  --codexopt-pre-bg: #050b16;
+  --codexopt-pre-fg: #e2e8f0;
+  --codexopt-pre-border: rgba(148, 163, 184, 0.16);
+  --codexopt-code-muted: #94a3b8;
+  --codexopt-code-keyword: #c084fc;
+  --codexopt-code-string: #86efac;
+  --codexopt-code-function: #60a5fa;
+  --codexopt-code-number: #f59e0b;
+  --codexopt-hero-primary-btn-bg: #5eead4;
+  --codexopt-hero-primary-btn-fg: #06202b;
+  --codexopt-hero-secondary-btn-bg: rgba(15, 23, 42, 0.72);
+  --codexopt-hero-secondary-btn-fg: #f8fafc;
+}
+
+.codexopt-hero {
+  padding: 2rem 1.25rem;
+  margin: 0 0 1.5rem 0;
+  border: 1px solid var(--codexopt-card-border);
+  border-radius: 1.25rem;
+  background: linear-gradient(135deg, var(--codexopt-hero-start), var(--codexopt-hero-end));
+  box-shadow: var(--codexopt-card-shadow);
+}
+
+.codexopt-hero h1 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: var(--codexopt-hero-fg);
+}
+
+.codexopt-hero,
+.codexopt-hero p,
+.codexopt-hero code {
+  color: var(--codexopt-hero-muted);
+}
+
+.codexopt-lead {
+  font-size: 1.12rem;
+  max-width: 48rem;
+  color: var(--codexopt-hero-muted);
+}
+
+.codexopt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.9rem;
+  margin: 1.25rem 0 1.75rem 0;
+}
+
+.codexopt-card {
+  padding: 1rem;
+  border: 1px solid var(--codexopt-card-border);
+  border-radius: 1rem;
+  background: var(--codexopt-card-bg);
+  box-shadow: var(--codexopt-card-shadow);
+}
+
+.codexopt-card strong {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.md-typeset .md-button {
+  border-radius: 999px;
+}
+
+.codexopt-hero .md-button {
+  border: 1px solid transparent;
+}
+
+.codexopt-hero .md-button--primary {
+  background: var(--codexopt-hero-primary-btn-bg);
+  color: var(--codexopt-hero-primary-btn-fg);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16);
+}
+
+.codexopt-hero .md-button--primary:hover {
+  opacity: 0.92;
+}
+
+.codexopt-hero .md-button:not(.md-button--primary) {
+  background: var(--codexopt-hero-secondary-btn-bg);
+  color: var(--codexopt-hero-secondary-btn-fg);
+  border-color: rgba(148, 163, 184, 0.2);
+}
+
+.codexopt-hero .md-button:not(.md-button--primary):hover {
+  background: color-mix(in srgb, var(--codexopt-hero-secondary-btn-bg) 88%, white);
+}
+
+.md-typeset a {
+  color: var(--codexopt-link);
+}
+
+.md-typeset code {
+  color: var(--codexopt-code-fg);
+  background: var(--codexopt-code-bg);
+}
+
+.md-typeset pre > code,
+.highlight code,
+.highlight code span {
+  color: var(--codexopt-pre-fg);
+  background: transparent;
+}
+
+.highlight {
+  background: var(--codexopt-pre-bg);
+  border-radius: 0.1rem;
+}
+
+.highlight pre {
+  background: var(--codexopt-pre-bg);
+  border: 1px solid var(--codexopt-pre-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.highlight .k,
+.highlight .kd,
+.highlight .kn {
+  color: var(--codexopt-code-keyword);
+}
+
+.highlight .s,
+.highlight .sa,
+.highlight .sb,
+.highlight .s1,
+.highlight .s2 {
+  color: var(--codexopt-code-string);
+}
+
+.highlight .nf,
+.highlight .nb {
+  color: var(--codexopt-code-function);
+}
+
+.highlight .c,
+.highlight .c1,
+.highlight .w,
+.highlight .p,
+.highlight .o,
+.highlight .go,
+.highlight .gp,
+.highlight .gh,
+.highlight .gt {
+  color: var(--codexopt-code-muted);
+}
+
+.highlight .n,
+.highlight .nv,
+.highlight .no,
+.highlight .nd {
+  color: var(--codexopt-pre-fg);
+}
+
+.highlight .m,
+.highlight .mi {
+  color: var(--codexopt-code-number);
+}
